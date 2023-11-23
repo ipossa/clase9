@@ -5,6 +5,8 @@ from PyQt5.QtGui import QPixmap, QFont
 from PyQt5.QtWidgets import QMainWindow, QDesktopWidget, QLabel, QApplication, QHBoxLayout, QFormLayout, QLineEdit, QPushButton, QDialog, QDialogButtonBox, QVBoxLayout
 from PyQt5 import QtGui, QtCore
 
+from Cliente import cliente
+
 class Ventana1(QMainWindow):
 
     def __init__(self,parent=None):
@@ -215,6 +217,8 @@ class Ventana1(QMainWindow):
                                        "padding: 10px;"
                                        "margin-top: 40px;")
 
+        self.botonBuscar.clicked.connect(self.accion_botonBuscar)
+
         self.botonRecuperar = QPushButton("Recuperar")
         self.botonRecuperar.setFixedWidth(90)
         self.botonRecuperar.setStyleSheet("background-color: #2843F0;"
@@ -225,6 +229,28 @@ class Ventana1(QMainWindow):
 
 
         self.fondo.setLayout(self.horizontal)
+
+
+        self.ventaDialogo = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
+
+        self.ventaDialogo.resize(300, 150)
+
+        self.botonAceptar = QDialogButtonBox.Ok
+        self.opciones = QDialogButtonBox(self.botonAceptar)
+        self.opciones.accepted.connect(self.ventaDialogo.accepted)
+
+        self.ventaDialogo.setWindowTitle("Formulario de registro.")
+        self.ventaDialogo.setWindowModality(Qt.ApplicationModal)
+
+        self.vetical = QVBoxLayout()
+        self.mensaje = QLabel("")
+        self.mensaje.setStyleSheet("background-color: #2843F0; color: #FFFFFF; padding: 10px;")
+
+        self.vetical.addWidget(self.mensaje)
+        self.vetical.addWidget(self.opciones)
+        self.ventaDialogo.setLayout(self.vetical)
+        self.datosCorrectos = True
+
 
     def accion_botonLimpiar(self):
         self.nombreCompleto.setText('')
@@ -249,8 +275,9 @@ class Ventana1(QMainWindow):
         self.botonAceptar = QDialogButtonBox.Ok
         self.opciones = QDialogButtonBox(self.botonAceptar)
         self.opciones.accepted.connect(self.ventaDialogo.accepted)
-        self.ventaDialogo.setWindowModality(Qt.ApplicationModal)
+
         self.ventaDialogo.setWindowTitle("Formulario de registro.")
+        self.ventaDialogo.setWindowModality(Qt.ApplicationModal)
 
 
         self.vetical = QVBoxLayout()
@@ -315,6 +342,91 @@ class Ventana1(QMainWindow):
             if linea == '':
                 break
             self.file.close()
+
+    def accion_botonBuscar(self):
+
+        self.ventaDialogo.setWindowTitle("Buscar preguntas de validacion")
+
+        if (
+                self.documento.text() == ''
+        ):
+            self.datosCorrectos = False
+
+            self.mensaje.setText("Si va a buscar las preguntas"
+                                 "pra recuperar la contraseña"
+                                 "\nDebe primero, ingresar el documento.")
+
+            self.ventaDialogo.exec_()
+
+        if (
+            not self.documento.text().isnumeric()
+        ):
+            self.datosCorrectos = False
+
+            self.mensaje.setText("El documento debe ser numerico."
+                                 "\nNo ingrese letras "
+                                 "ni caracteres especificos.")
+
+            self.ventaDialogo.exec_()
+            self.documento.setText('')
+        if (
+            self.datosCorrectos
+        ):
+            self.file = open('datos/Cliente.txt', 'rb')
+
+            usuario = []
+
+            while self.file:
+
+              linea = self.file.readline().decode('UTF-8')
+              lista = linea.split(";")
+
+              if linea == '':
+                 break
+
+              u = cliente(
+                  lista[0],
+                  lista[1],
+                  lista[2],
+                  lista[3],
+                  lista[4],
+                  lista[5],
+                  lista[6],
+                  lista[7],
+                  lista[8],
+                  lista[9],
+                  lista[10],
+              )
+
+              #fgfdgdf
+              usuario.append(u)
+
+            self.file.close()
+
+            existeDocumento = False
+
+            for u in usuario:
+                if u.documento == self.documento.text():
+                    self.Pregunta1.setText(u.Pregunta1)
+                    self.Pregunta2.setText(u.Pregunta2)
+                    self.Pregunta3.setText(u.Pregunta3)
+
+                    existeDocumento = True
+                    break
+            if (
+                not existeDocumento
+            ):
+                self.mensaje.setText("No existe un usuario con este documento:\n"
+                                     + self.documento.text())
+                self.ventaDialogo.exec_()
+
+
+
+
+
+
+
+
 
 
 
