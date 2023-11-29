@@ -2,7 +2,6 @@ class cliente:
     def __init__(self,nombreCompleto,
                  usuario,
                  contraseña,
-                 contraseña2,
                  documento,
                  correo,
                  Pregunta1,
@@ -16,7 +15,6 @@ class cliente:
 
         self.usuario = usuario
         self.contraseña = contraseña
-        self.contraseña2 = contraseña2
         self.documento = documento
         self.correo = correo
         self.Pregunta1 = Pregunta1

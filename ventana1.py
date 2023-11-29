@@ -225,6 +225,7 @@ class Ventana1(QMainWindow):
                                        "color: #FDFDFD;"
                                        "padding: 10px;"
                                        "margin-top: 40px;")
+        self.botonRecuperar.clicked.connect(self.accion_botonRecuperar)
         self.ladoDerecho.addRow(self.botonBuscar, self.botonRecuperar)
 
 
@@ -237,7 +238,7 @@ class Ventana1(QMainWindow):
 
         self.botonAceptar = QDialogButtonBox.Ok
         self.opciones = QDialogButtonBox(self.botonAceptar)
-        self.opciones.accepted.connect(self.ventaDialogo.accepted)
+        self.opciones.accepted.connect(self.ventaDialogo.accept)
 
         self.ventaDialogo.setWindowTitle("Formulario de registro.")
         self.ventaDialogo.setWindowModality(Qt.ApplicationModal)
@@ -249,7 +250,7 @@ class Ventana1(QMainWindow):
         self.vetical.addWidget(self.mensaje)
         self.vetical.addWidget(self.opciones)
         self.ventaDialogo.setLayout(self.vetical)
-        self.datosCorrectos = True
+
 
 
     def accion_botonLimpiar(self):
@@ -265,16 +266,18 @@ class Ventana1(QMainWindow):
         self.respuesta2.setText('')
         self.Pregunta3.setText('')
         self.respuesta3.setText('')
-        
+
 
     def accion_botonRegistrar(self):
+
+        self.datosCorrectos = True
         self.ventaDialogo = QDialog(None, QtCore.Qt.WindowSystemMenuHint | QtCore.Qt.WindowTitleHint)
 
         self.ventaDialogo.resize(300, 150)
 
         self.botonAceptar = QDialogButtonBox.Ok
         self.opciones = QDialogButtonBox(self.botonAceptar)
-        self.opciones.accepted.connect(self.ventaDialogo.accepted)
+        self.opciones.accepted.connect(self.ventaDialogo.accept)
 
         self.ventaDialogo.setWindowTitle("Formulario de registro.")
         self.ventaDialogo.setWindowModality(Qt.ApplicationModal)
@@ -324,7 +327,6 @@ class Ventana1(QMainWindow):
             self.file.write(bytes(self.nombreCompleto.text() + ";"
                                   + self.usuario.text() + ";"
                                   + self.contraseña.text() + ";"
-                                  + self.contraseña2.text() + ";"
                                   + self.documento.text() + ";"
                                   + self.correo.text() + ";"
                                   + self.Pregunta1.text() + ";"
@@ -344,6 +346,8 @@ class Ventana1(QMainWindow):
             self.file.close()
 
     def accion_botonBuscar(self):
+
+        self.datosCorrectos = True
 
         self.ventaDialogo.setWindowTitle("Buscar preguntas de validacion")
 
@@ -398,7 +402,7 @@ class Ventana1(QMainWindow):
                   lista[10],
               )
 
-              #fgfdgdf
+
               usuario.append(u)
 
             self.file.close()
@@ -419,6 +423,117 @@ class Ventana1(QMainWindow):
                 self.mensaje.setText("No existe un usuario con este documento:\n"
                                      + self.documento.text())
                 self.ventaDialogo.exec_()
+
+    def accion_botonRecuperar(self):
+
+        self.datosCorrectos = True
+
+        self.ventaDialogo.setWindowTitle("Recuperar contraseña")
+
+
+        if (
+            self.Pregunta1.text() == '' or
+            self.Pregunta2.text() == '' or
+            self.Pregunta3.text() == ''
+
+        ):
+            self.datosCorrectos = False
+
+            self.mensaje.setText("Para recu´perar la contraseña debe"
+                                 "\nbusscar las preguntas de verificacion."
+                                 "\npresione el boton 'buscar'")
+
+            self.ventaDialogo.exec_()
+
+        if (
+                self.Pregunta1.text() != '' and
+                self.respuesta1.text() == '' and
+                self.Pregunta2.text() != '' and
+                self.respuesta2.text() == '' and
+                self.Pregunta3.text() != '' and
+                self.respuesta3.text() == ''
+        ):
+
+            self.datosCorrectos = False
+            self.mensaje.setText("para recuperar la contraseña debe"
+                                 "\ningresar las respuestas de cada pregunta.")
+
+            self.ventaDialogo.exec_()
+
+        if (
+            self.datosCorrectos
+        ):
+            self.file = open("datos/Cliente.txt", 'rb')
+
+            # ...
+            usuario = []
+
+            while self.file:
+                linea = self.file.readline().decode('UTF-8')
+                lista = linea.split(";")
+
+                if linea == '':
+                    break
+
+                u = cliente(
+                    lista[0],
+                    lista[1],
+                    lista[2],
+                    lista[3],
+                    lista[4],
+                    lista[5],
+                    lista[6],
+                    lista[7],
+                    lista[8],
+                    lista[9],
+                    lista[10],
+                )
+
+                usuario.append(u)
+
+            self.file.close()
+            # ...
+
+            existedocumento = False
+
+            resp1 = ''
+            resp2 = ''
+            resp3 = ''
+            contra = ''
+
+
+            for u in usuario:
+                if u.documento == self.documento.text():
+
+                    existedocumento = True
+                    resp1 = u.respuesta1
+                    resp2 = u.respuesta2
+                    resp3 = u.respuesta3
+                    contra = u.contraseña
+
+                    break
+            if (
+
+                self.respuesta1.text().lower().strip() == resp1.lower().strip() and
+                self.respuesta1.text().lower().strip() == resp1.lower().strip() and
+                self.respuesta1.text().lower().strip() == resp1.lower().strip()
+            ):
+
+                self.accion_botonLimpiar()
+                self.mensaje.setText("Contraseña: "+contra)
+                self.ventaDialogo.exec_()
+            else:
+                self.mensaje.setText("Las respuestas son incorrectas "
+                                     "\npara estas preguntas de recuperacion")
+
+                self.ventaDialogo.exec_()
+
+
+
+
+
+
+
 
 
 
