@@ -1,3 +1,7 @@
 a;a;a;a;a;a;a;a;a;a;a
 juan ossa;ipossa;123456;147258;jposQgma;tio;g;tia;j;perro;7
 dddd;dddd;a;45;a;a;a;a;a;a;a
+juan pablo ossa garcia;ipossa;212527;1001015947;j@g.com;nombre del perro;ringo;nombre del papa;carlos;nombre de la tia;eliza
+paulina;pauli;1597;123456789;p@g.com;mejor novio;juna pablo;que te gusta;modelaje;que estudio;comunicacion organizacional
+juan;juan23;456;321654;k@g.cpom;gato;lion;hermana;maria;papa;huevo
+lito;lito5;897;987;hgj;novia;laura;mosa;juliana;cacho;catalina

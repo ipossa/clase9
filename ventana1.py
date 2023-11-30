@@ -7,6 +7,8 @@ from PyQt5 import QtGui, QtCore
 
 from Cliente import cliente
 
+from ventana2 import  Ventana2
+
 class Ventana1(QMainWindow):
 
     def __init__(self,parent=None):
@@ -215,7 +217,7 @@ class Ventana1(QMainWindow):
         self.botonBuscar.setStyleSheet("background-color: #2843F0;"
                                        "color: #FDFDFD;"
                                        "padding: 10px;"
-                                       "margin-top: 40px;")
+                                       "margin-top: 10px;")
 
         self.botonBuscar.clicked.connect(self.accion_botonBuscar)
 
@@ -224,9 +226,23 @@ class Ventana1(QMainWindow):
         self.botonRecuperar.setStyleSheet("background-color: #2843F0;"
                                        "color: #FDFDFD;"
                                        "padding: 10px;"
-                                       "margin-top: 40px;")
+                                       "margin-top: 10px;")
+
         self.botonRecuperar.clicked.connect(self.accion_botonRecuperar)
+
+
         self.ladoDerecho.addRow(self.botonBuscar, self.botonRecuperar)
+
+        self.botonContinuar = QPushButton("Continuar")
+        self.botonContinuar.setFixedWidth(90)
+        self.botonContinuar.setStyleSheet("background-color: #2843F0;"
+                                          "color: #FDFDFD;"
+                                          "padding: 10px;"
+                                          "margin-top: 10px;")
+        self.botonContinuar.clicked.connect(self.accion_botonContinuar)
+        self.ladoDerecho.addRow(self.botonContinuar)
+
+
 
 
         self.fondo.setLayout(self.horizontal)
@@ -527,6 +543,10 @@ class Ventana1(QMainWindow):
                                      "\npara estas preguntas de recuperacion")
 
                 self.ventaDialogo.exec_()
+    def accion_botonContinuar(self):
+        self.hide()
+        self.ventana2 = Ventana2(self)
+        self.ventana2.show()
 
 
 
